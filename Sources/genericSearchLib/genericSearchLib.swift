@@ -25,7 +25,7 @@ extension SearchPath: Hashable {
     }
 }
 
-protocol SearchResult {
+public protocol SearchResult {
     var searchText: String { get set }
     var matchingText: String { get set }
     var searchPath: SearchPath { get set }
@@ -37,9 +37,9 @@ protocol SearchResult {
          searchPath: SearchPath)
 }
 
-protocol UniqueSearchResult: Hashable, SearchResult { }
+public protocol UniqueSearchResult: Hashable, SearchResult { }
 
-protocol SearchDefinition {
+public protocol SearchDefinition {
     
     func search<Content, SearchResult: UniqueSearchResult>(content: [Content],
                                                            searchString: String,
@@ -50,7 +50,7 @@ protocol SearchDefinition {
 
 public struct GenericSearch: SearchDefinition {
     
-    func search<Content, SearchResult: UniqueSearchResult>(content: [Content],
+    public func search<Content, SearchResult: UniqueSearchResult>(content: [Content],
                                                            searchString: String,
                                                            searchPaths: [SearchPath],
                                                            resultType: SearchResult.Type,
@@ -119,15 +119,15 @@ public struct GenericSearch: SearchDefinition {
 
 }
 
-protocol FilterService: class {
+public protocol FilterService: class {
     func apply<Content>(filter: SearchResult, to content: [Content]) -> [Content]
 }
 
 public class TextFilter: FilterService {
     
-    typealias SearchFilter = SearchResult
+    public typealias SearchFilter = SearchResult
     
-    func apply<Content>(filter: SearchFilter, to content: [Content]) -> [Content] {
+    public func apply<Content>(filter: SearchFilter, to content: [Content]) -> [Content] {
         
         let filteredContent = content.filter { item in
             return applyFilter(path: filter.searchPath,
@@ -158,4 +158,10 @@ public class TextFilter: FilterService {
                                itemToSearch: nextItemToSearch)
         }
     }
+}
+
+public protocol SearchService: class {
+    func search<Content>(content: [Content],
+                         with string: String,
+                         completion: @escaping (_ results: [SearchResult]) -> Void)
 }
