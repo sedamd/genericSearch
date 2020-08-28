@@ -26,39 +26,35 @@ extension SearchPath: Hashable {
 }
 
 public protocol SearchResult {
-    public var searchText: String { get set }
-    public var matchingText: String { get set }
-    public var searchPath: SearchPath { get set }
+    var searchText: String { get set }
+    var matchingText: String { get set }
+    var searchPath: SearchPath { get set }
     
-    public var categoryName: String { get }
+    var categoryName: String { get }
     
-    public init(searchText: String,
-                matchingText: String,
-                searchPath: SearchPath)
+    init(searchText: String,
+         matchingText: String,
+         searchPath: SearchPath)
 }
 
 public protocol UniqueSearchResult: Hashable, SearchResult { }
 
 public protocol SearchDefinition {
     
-    public func search<Content, SearchResult: UniqueSearchResult>(content: [Content],
-                                                                  searchString: String,
-                                                                  searchPaths: [SearchPath],
-                                                                  resultType: SearchResult.Type,
-                                                                  completion: @escaping (_ results: [SearchResult]) -> Void)
+    func search<Content, SearchResult: UniqueSearchResult>(content: [Content],
+                                                           searchString: String,
+                                                           searchPaths: [SearchPath],
+                                                           resultType: SearchResult.Type,
+                                                           completion: @escaping (_ results: [SearchResult]) -> Void)
 }
 
 public struct GenericSearch: SearchDefinition {
     
-    public init() {
-        
-    }
-    
     public func search<Content, SearchResult: UniqueSearchResult>(content: [Content],
-                                                           searchString: String,
-                                                           searchPaths: [SearchPath],
-                                                           resultType: SearchResult.Type,
-                                                           completion: @escaping ([SearchResult]) -> Void) {
+                                                                  searchString: String,
+                                                                  searchPaths: [SearchPath],
+                                                                  resultType: SearchResult.Type,
+                                                                  completion: @escaping ([SearchResult]) -> Void) {
         if searchString == "" {
             completion([])
             return
@@ -124,7 +120,7 @@ public struct GenericSearch: SearchDefinition {
 }
 
 public protocol FilterService: class {
-    public func apply<Content>(filter: SearchResult, to content: [Content]) -> [Content]
+    func apply<Content>(filter: SearchResult, to content: [Content]) -> [Content]
 }
 
 public class TextFilter: FilterService {
@@ -165,7 +161,7 @@ public class TextFilter: FilterService {
 }
 
 public protocol SearchService: class {
-    public func search<Content>(content: [Content],
-                                with string: String,
-                                completion: @escaping (_ results: [SearchResult]) -> Void)
+    func search<Content>(content: [Content],
+                         with string: String,
+                         completion: @escaping (_ results: [SearchResult]) -> Void)
 }
