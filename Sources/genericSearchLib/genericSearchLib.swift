@@ -26,11 +26,11 @@ extension SearchPath: Hashable {
 }
 
 public class SearchResult {
-    var searchText: String
-    var matchingText: String
-    var searchPath: SearchPath
+    public var searchText: String
+    public var matchingText: String
+    public var searchPath: SearchPath
     
-    var categoryName: String = ""
+    public var categoryName: String = ""
     
     public required init(searchText: String,
          matchingText: String,
