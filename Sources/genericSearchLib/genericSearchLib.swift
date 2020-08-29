@@ -61,6 +61,8 @@ public protocol SearchDefinition {
 
 public struct GenericSearch: SearchDefinition {
     
+    public init() { }
+    
     public func search<Content>(content: [Content],
                                 searchString: String,
                                 searchPaths: [SearchPath],
