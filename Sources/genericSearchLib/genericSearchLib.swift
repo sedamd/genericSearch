@@ -32,7 +32,7 @@ public class SearchResult {
     
     var categoryName: String = ""
     
-    required init(searchText: String,
+    public required init(searchText: String,
          matchingText: String,
          searchPath: SearchPath) {
         
