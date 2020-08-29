@@ -25,12 +25,12 @@ extension SearchPath: Hashable {
     }
 }
 
-public class SearchResult {
+open class SearchResult {
     public var searchText: String
     public var matchingText: String
     public var searchPath: SearchPath
     
-    public var categoryName: String = ""
+    open var categoryName: String = ""
     
     public required init(searchText: String,
          matchingText: String,
