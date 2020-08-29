@@ -25,36 +25,47 @@ extension SearchPath: Hashable {
     }
 }
 
-public protocol SearchResult {
-    var searchText: String { get set }
-    var matchingText: String { get set }
-    var searchPath: SearchPath { get set }
+public class SearchResult {
+    var searchText: String
+    var matchingText: String
+    var searchPath: SearchPath
     
-    var categoryName: String { get }
+    var categoryName: String = ""
     
-    init(searchText: String,
+    required init(searchText: String,
          matchingText: String,
-         searchPath: SearchPath)
+         searchPath: SearchPath) {
+        
+        self.searchText = searchText
+        self.matchingText = matchingText
+        self.searchPath = searchPath
+    }
 }
 
-public protocol UniqueSearchResult: Hashable, SearchResult { }
+extension SearchResult: Hashable {
+    public func hash(into hasher: inout Hasher) { return hasher.combine(ObjectIdentifier(self)) }
+
+    public static func == (lhs: SearchResult, rhs: SearchResult) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
+}
 
 public protocol SearchDefinition {
     
-    func search<Content, SearchResult: UniqueSearchResult>(content: [Content],
-                                                           searchString: String,
-                                                           searchPaths: [SearchPath],
-                                                           resultType: SearchResult.Type,
-                                                           completion: @escaping (_ results: [SearchResult]) -> Void)
+    func search<Content>(content: [Content],
+                         searchString: String,
+                         searchPaths: [SearchPath],
+                         resultType: SearchResult.Type,
+                         completion: @escaping (_ results: [SearchResult]) -> Void)
 }
 
 public struct GenericSearch: SearchDefinition {
     
-    public func search<Content, SearchResult: UniqueSearchResult>(content: [Content],
-                                                                  searchString: String,
-                                                                  searchPaths: [SearchPath],
-                                                                  resultType: SearchResult.Type,
-                                                                  completion: @escaping ([SearchResult]) -> Void) {
+    public func search<Content>(content: [Content],
+                                searchString: String,
+                                searchPaths: [SearchPath],
+                                resultType: SearchResult.Type,
+                                completion: @escaping ([SearchResult]) -> Void) {
         if searchString == "" {
             completion([])
             return
@@ -87,11 +98,11 @@ public struct GenericSearch: SearchDefinition {
         completion(resultsArray)
     }
     
-    private func search<Content, SearchResult: UniqueSearchResult>(itemToSearch: Content,
-                                                                   searchString: String,
-                                                                   originalSearchPath: SearchPath,
-                                                                   searchPath: SearchPath,
-                                                                   results: inout Set<SearchResult>) {
+    private func search<Content>(itemToSearch: Content,
+                                 searchString: String,
+                                 originalSearchPath: SearchPath,
+                                 searchPath: SearchPath,
+                                 results: inout Set<SearchResult>) {
         
         let searchStringLowercased = searchString.lowercased()
         
