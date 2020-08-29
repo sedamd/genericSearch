@@ -30,7 +30,9 @@ open class SearchResult {
     public var matchingText: String
     public var searchPath: SearchPath
     
-    open var categoryName: String = ""
+    open var categoryName: String {
+        return ""
+    }
     
     public required init(searchText: String,
          matchingText: String,
