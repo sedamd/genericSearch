@@ -86,6 +86,7 @@ public struct GenericSearch: SearchDefinition {
                             searchString: searchString,
                             originalSearchPath: prop,
                             searchPath: prop,
+                            resultType: resultType,
                             results: &results)
             }
         }
@@ -106,6 +107,7 @@ public struct GenericSearch: SearchDefinition {
                                  searchString: String,
                                  originalSearchPath: SearchPath,
                                  searchPath: SearchPath,
+                                 resultType: SearchResult.Type,
                                  results: inout Set<SearchResult>) {
         
         let searchStringLowercased = searchString.lowercased()
@@ -113,9 +115,9 @@ public struct GenericSearch: SearchDefinition {
         guard let nestedLevel = searchPath.nestedLevel else {
             if let itemToSearch = itemToSearch[keyPath: searchPath.currentLevel] as? String,
                 itemToSearch.lowercased().contains(searchStringLowercased) {
-                let result = SearchResult.init(searchText: searchString,
-                                               matchingText: itemToSearch,
-                                               searchPath: originalSearchPath)
+                let result = resultType.init(searchText: searchString,
+                                             matchingText: itemToSearch,
+                                             searchPath: originalSearchPath)
                 results.insert(result)
             }
             return
@@ -128,6 +130,7 @@ public struct GenericSearch: SearchDefinition {
                           searchString: searchString,
                           originalSearchPath: originalSearchPath,
                           searchPath: nestedLevel,
+                          resultType: resultType,
                           results: &results)
         }
     }
